@@ -3,8 +3,6 @@ import { Command } from "commander";
 import * as path from "node:path";
 import {
   fal,
-  resolveModel,
-  MODEL_ALIASES,
   buildGenerateInput,
   buildEditInput,
   buildVideoInput,
@@ -34,7 +32,7 @@ program
   .command("generate")
   .description("Text-to-image generation")
   .requiredOption("-p, --prompt <prompt>", "Image generation prompt")
-  .option("-m, --model <model>", "Model alias or full ID", "nano-banana-2")
+  .option("-m, --model <model>", "Full model ID (use 'fal models' to search)", "fal-ai/nano-banana-2")
   .option("-s, --size <size>", "Size preset (flux models)", "square_hd")
   .option("-n, --num <n>", "Number of images (1-4)", "1")
   .option("--format <format>", "Output format: jpeg, png, webp", "png")
@@ -94,7 +92,7 @@ program
     "--images <urls>",
     "Comma-separated image URLs or local paths"
   )
-  .option("-m, --model <model>", "Model alias or full ID", "nano-banana-2")
+  .option("-m, --model <model>", "Full model ID (use 'fal models' to search)", "fal-ai/nano-banana-2")
   .option("-s, --size <size>", "Size preset (non-nano-banana)", "square_hd")
   .option("--format <format>", "Output format: jpeg, png, webp", "png")
   .option("--seed <seed>", "Seed for reproducibility")
@@ -137,7 +135,7 @@ program
   .option("-p, --prompt <prompt>", "Video prompt")
   .option("--start <image>", "Start frame image (URL or local path)")
   .option("--end <image>", "End frame image (URL or local path)")
-  .option("-m, --model <model>", "Model alias or full ID", "kling-2.6")
+  .option("-m, --model <model>", "Full model ID (use 'fal models' to search)", "fal-ai/kling-video/v2.6/pro/image-to-video")
   .option("-d, --duration <sec>", "Duration: 5 or 10", "5")
   .option("--ratio <ratio>", "Aspect ratio", "9:16")
   .option("--negative <prompt>", "Negative prompt")
@@ -234,7 +232,7 @@ program
   .option("-o, --output <file>", "Save first output file locally")
   .action(async (modelId: string, opts) => {
     try {
-      const model = resolveModel(modelId);
+      const model = modelId;
       const input = parseJSON(opts.input);
 
       process.stderr.write(`Running ${model}...\n`);
@@ -259,7 +257,7 @@ program
   .option("--timeout <seconds>", "Max wait time", "600")
   .action(async (modelId: string, opts) => {
     try {
-      const model = resolveModel(modelId);
+      const model = modelId;
       const input = parseJSON(opts.input);
 
       if (opts.wait) {
@@ -293,7 +291,7 @@ program
   .option("--logs", "Include logs")
   .action(async (modelId: string, requestId: string, opts) => {
     try {
-      const model = resolveModel(modelId);
+      const model = modelId;
       const result = await fal.queue.status(model, {
         requestId,
         logs: opts.logs ? true : undefined,
@@ -313,7 +311,7 @@ program
   .option("-o, --output <file>", "Save first output file locally")
   .action(async (modelId: string, requestId: string, opts) => {
     try {
-      const model = resolveModel(modelId);
+      const model = modelId;
       const result = await fal.queue.result(model, { requestId });
       const saved = await saveOutput(result.data, opts.output);
       if (saved) process.stderr.write(`Saved to ${opts.output} (${saved})\n`);
@@ -331,7 +329,7 @@ program
   .description("Cancel a queued job")
   .action(async (modelId: string, requestId: string) => {
     try {
-      const model = resolveModel(modelId);
+      const model = modelId;
       await fal.queue.cancel(model, { requestId });
       console.log("Cancelled.");
     } catch (err: any) {
@@ -405,20 +403,6 @@ program
     } catch (err: any) {
       console.error(`Error: ${err.message}`);
       process.exit(1);
-    }
-  });
-
-// ── aliases (backward compat) ──
-
-program
-  .command("aliases")
-  .description("List shortcut aliases (hardcoded)")
-  .action(() => {
-    console.log(
-      `${"ALIAS".padEnd(20)} MODEL ID\n${"-".repeat(70)}`
-    );
-    for (const [alias, id] of Object.entries(MODEL_ALIASES)) {
-      console.log(`${alias.padEnd(20)} ${id}`);
     }
   });
 

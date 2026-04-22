@@ -3,30 +3,6 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 
-// ── Model aliases (convenience shortcuts) ──
-
-export const MODEL_ALIASES: Record<string, string> = {
-  "nano-banana-2": "fal-ai/nano-banana-2",
-  "nano-banana-pro": "fal-ai/nano-banana-pro",
-  "flux-2-flex": "fal-ai/flux-2-flex",
-  "flux-2-flash": "fal-ai/flux-2-flash",
-  "flux-lora": "fal-ai/flux-lora",
-  "kling-2.6": "fal-ai/kling-video/v2.6/pro/image-to-video",
-  "kling-3.0": "fal-ai/kling-video/v3/pro/image-to-video",
-  "kling-t2v": "fal-ai/kling-video/v2.6/pro/text-to-video",
-  "ltx-video": "fal-ai/ltx-video/v2.3/image-to-video",
-  "veo3": "fal-ai/veo3",
-  "esrgan": "fal-ai/esrgan",
-  "recraft-v4": "fal-ai/recraft-v4/text-to-image",
-  "seedance-2.0": "bytedance/seedance-2.0/image-to-video",
-  "seedance-i2v": "bytedance/seedance-2.0/image-to-video",
-  "seedance-t2v": "bytedance/seedance-2.0/text-to-video",
-  "seedance-ref": "bytedance/seedance-2.0/reference-to-video",
-  "seedance-fast": "bytedance/seedance-2.0/fast/image-to-video",
-  "seedance-fast-t2v": "bytedance/seedance-2.0/fast/text-to-video",
-  "seedance-fast-ref": "bytedance/seedance-2.0/fast/reference-to-video",
-};
-
 export const IMAGE_SIZES = [
   "square_hd",
   "square",
@@ -35,10 +11,6 @@ export const IMAGE_SIZES = [
   "landscape_4_3",
   "landscape_16_9",
 ];
-
-export function resolveModel(model: string): string {
-  return MODEL_ALIASES[model] || model;
-}
 
 // ── Dynamic model discovery (fal.ai Platform API) ──
 
@@ -269,7 +241,7 @@ export function buildGenerateInput(opts: {
   steps?: number;
   guidance?: number;
 }): { model: string; input: Record<string, any> } {
-  const resolved = resolveModel(opts.model);
+  const resolved = opts.model;
   const input: Record<string, any> = {
     prompt: opts.prompt,
     output_format: opts.format || "png",
@@ -298,7 +270,7 @@ export async function buildEditInput(opts: {
   format?: string;
   seed?: number;
 }): Promise<{ model: string; input: Record<string, any> }> {
-  const resolved = resolveModel(opts.model);
+  const resolved = opts.model;
   const imageUrls = await resolveUrls(opts.images);
 
   const input: Record<string, any> = {
@@ -328,7 +300,7 @@ export async function buildVideoInput(opts: {
   negative?: string;
   no_audio?: boolean;
 }): Promise<{ model: string; input: Record<string, any> }> {
-  const resolved = resolveModel(opts.model);
+  const resolved = opts.model;
   const input: Record<string, any> = {
     duration: opts.duration || "5",
   };
@@ -350,7 +322,7 @@ export async function buildUpscaleInput(opts: {
   face?: boolean;
   format?: string;
 }): Promise<{ model: string; input: Record<string, any> }> {
-  const resolved = resolveModel(opts.model);
+  const resolved = opts.model;
   const input: Record<string, any> = {
     image_url: await resolveUrl(opts.image),
     scale: opts.scale || 2,

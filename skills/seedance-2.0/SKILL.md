@@ -2,6 +2,8 @@
 
 Generate AI videos using ByteDance's Seedance 2.0 via the Fal.ai MCP primitives.
 
+Prompting guide inspired by [timkoda/seedance-skill](https://github.com/timkoda/seedance-skill).
+
 ## When to Use This Skill
 
 Use this skill when the user asks to generate a video using Seedance 2.0, or when they need

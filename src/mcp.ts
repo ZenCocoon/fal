@@ -7,8 +7,6 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import {
   fal,
-  resolveModel,
-  MODEL_ALIASES,
   saveOutput,
   autoSaveOutput,
   uploadFile,
@@ -24,13 +22,13 @@ const TOOLS = [
   {
     name: "fal_submit",
     description:
-      "Submit an async job to any fal.ai model. IMPORTANT: Do NOT guess model IDs — they are not intuitive (e.g. Seedance 2.0 is \"bytedance/seedance-2.0/image-to-video\", not \"fal-ai/seedance-2.0\"). If you are not 100% certain of the exact endpoint ID, call fal_search_models first to find it. Aliases from fal_list_aliases are a small subset — fal_search_models searches the full live catalog of 1300+ models. Input must be a JSON string matching the target model's API schema. Returns a request_id for tracking with fal_status and fal_result. Recommended for video generation and any job taking >30 seconds.",
+      "Submit an async job to any fal.ai model. IMPORTANT: Do NOT guess model IDs — they are not intuitive (e.g. Seedance 2.0 is \"bytedance/seedance-2.0/image-to-video\", not \"fal-ai/seedance-2.0\"). If you are not 100% certain of the exact endpoint ID, call fal_search_models first to find it. Input must be a JSON string matching the target model's API schema. Returns a request_id for tracking with fal_status and fal_result. Recommended for video generation and any job taking >30 seconds.",
     inputSchema: {
       type: "object" as const,
       properties: {
         model_id: {
           type: "string",
-          description: "Model alias or full model ID",
+          description: "Full model ID (use fal_search_models to find it)",
         },
         input: {
           type: "string",
@@ -59,7 +57,7 @@ const TOOLS = [
       properties: {
         model_id: {
           type: "string",
-          description: "Model alias or full model ID",
+          description: "Full model ID (use fal_search_models to find it)",
         },
         input: {
           type: "string",
@@ -82,7 +80,7 @@ const TOOLS = [
       properties: {
         model_id: {
           type: "string",
-          description: "Model alias or full model ID",
+          description: "Full model ID (use fal_search_models to find it)",
         },
         request_id: {
           type: "string",
@@ -102,7 +100,7 @@ const TOOLS = [
       properties: {
         model_id: {
           type: "string",
-          description: "Model alias or full model ID",
+          description: "Full model ID (use fal_search_models to find it)",
         },
         request_id: {
           type: "string",
@@ -124,7 +122,7 @@ const TOOLS = [
       properties: {
         model_id: {
           type: "string",
-          description: "Model alias or full model ID",
+          description: "Full model ID (use fal_search_models to find it)",
         },
         request_id: {
           type: "string",
@@ -177,15 +175,6 @@ const TOOLS = [
       },
     },
   },
-  {
-    name: "fal_list_aliases",
-    description:
-      "List hardcoded shortcut aliases. WARNING: This is a tiny subset of available models. If the model you need is NOT in this list, do NOT guess the model ID — call fal_search_models instead to search the full live catalog. Guessing model IDs will fail or hit the wrong model.",
-    inputSchema: {
-      type: "object" as const,
-      properties: {},
-    },
-  },
 ];
 
 // ── Tool handlers ──
@@ -196,7 +185,7 @@ async function handleTool(
 ): Promise<string> {
   switch (name) {
     case "fal_run": {
-      const model = resolveModel(args.model_id);
+      const model = args.model_id;
       let input: Record<string, any>;
       try {
         input = JSON.parse(args.input);
@@ -220,7 +209,7 @@ async function handleTool(
     }
 
     case "fal_submit": {
-      const model = resolveModel(args.model_id);
+      const model = args.model_id;
       let input: Record<string, any>;
       try {
         input = JSON.parse(args.input);
@@ -255,7 +244,7 @@ async function handleTool(
     }
 
     case "fal_status": {
-      const model = resolveModel(args.model_id);
+      const model = args.model_id;
       try {
         const result = await fal.queue.status(model, {
           requestId: args.request_id,
@@ -268,7 +257,7 @@ async function handleTool(
     }
 
     case "fal_result": {
-      const model = resolveModel(args.model_id);
+      const model = args.model_id;
       try {
         const result = await fal.queue.result(model, {
           requestId: args.request_id,
@@ -289,7 +278,7 @@ async function handleTool(
 
     case "fal_cancel": {
       try {
-        await fal.queue.cancel(resolveModel(args.model_id), {
+        await fal.queue.cancel(args.model_id, {
           requestId: args.request_id,
         });
         return "Cancelled.";
@@ -333,13 +322,6 @@ async function handleTool(
       } catch (err: any) {
         return `Model search error: ${err.message}`;
       }
-    }
-
-    case "fal_list_aliases": {
-      const lines = Object.entries(MODEL_ALIASES).map(
-        ([alias, id]) => `${alias.padEnd(20)} ${id}`
-      );
-      return `${"ALIAS".padEnd(20)} MODEL ID\n${"-".repeat(70)}\n${lines.join("\n")}\n\n⚠️  This is a SMALL subset of 1300+ models on fal.ai. If the model you need is NOT listed above, do NOT guess the ID — call fal_search_models to search the full live catalog. Model IDs are vendor-specific paths that cannot be guessed reliably.`;
     }
 
     default:

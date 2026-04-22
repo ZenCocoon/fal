@@ -37,7 +37,7 @@ Or with `--http` flag: `node dist/mcp.js --http`
 
 ## Architecture
 
-- `src/core.ts` - Shared logic: fal client, model aliases, dynamic model discovery, input builders, file helpers, error extraction, auto-save
+- `src/core.ts` - Shared logic: fal client, dynamic model discovery, input builders, file helpers, error extraction, auto-save
 - `src/cli.ts` - CLI entry point (commander) with shortcut commands
 - `src/mcp.ts` - MCP server (primitives only, no model-specific shortcuts)
 
@@ -69,42 +69,14 @@ fal models --cursor <cursor>        # Paginate
 
 The `fal_search_models` tool queries the live catalog with optional `query`, `category`, `limit`, and `cursor` parameters. **This should be the primary way to discover models.** Model IDs on fal.ai are vendor-specific paths (e.g. `bytedance/seedance-2.0/image-to-video`) that cannot be guessed — always search first if unsure.
 
-### Shortcut Aliases
-
-A small set of hardcoded aliases exist for frequently used models (see `fal aliases` or `fal_list_aliases`). **If the model you need is not listed here, use `fal_search_models` — do NOT guess the model ID.**
-
-| Alias | Full Model ID |
-|-------|---------------|
-| `nano-banana-2` | `fal-ai/nano-banana-2` |
-| `nano-banana-pro` | `fal-ai/nano-banana-pro` |
-| `flux-2-flex` | `fal-ai/flux-2-flex` |
-| `flux-2-flash` | `fal-ai/flux-2-flash` |
-| `flux-lora` | `fal-ai/flux-lora` |
-| `kling-2.6` | `fal-ai/kling-video/v2.6/pro/image-to-video` |
-| `kling-3.0` | `fal-ai/kling-video/v3/pro/image-to-video` |
-| `kling-t2v` | `fal-ai/kling-video/v2.6/pro/text-to-video` |
-| `ltx-video` | `fal-ai/ltx-video/v2.3/image-to-video` |
-| `veo3` | `fal-ai/veo3` |
-| `esrgan` | `fal-ai/esrgan` |
-| `recraft-v4` | `fal-ai/recraft-v4/text-to-image` |
-| `seedance-2.0` | `bytedance/seedance-2.0/image-to-video` |
-| `seedance-i2v` | `bytedance/seedance-2.0/image-to-video` |
-| `seedance-t2v` | `bytedance/seedance-2.0/text-to-video` |
-| `seedance-ref` | `bytedance/seedance-2.0/reference-to-video` |
-| `seedance-fast` | `bytedance/seedance-2.0/fast/image-to-video` |
-| `seedance-fast-t2v` | `bytedance/seedance-2.0/fast/text-to-video` |
-| `seedance-fast-ref` | `bytedance/seedance-2.0/fast/reference-to-video` |
-
-Any full model ID also works directly, but **do not guess** — use `fal_search_models` to find the exact endpoint ID.
-
 ## Shortcut Commands
 
 ### generate - Text-to-Image
 
 ```bash
 fal generate --prompt "A sunset over the ocean" --output sunset.png
-fal generate --prompt "..." --model flux-2-flex --size landscape_16_9 --output wide.png
-fal generate --prompt "..." --model nano-banana-2 --ratio 16:9 --resolution 2K --output hd.png
+fal generate --prompt "..." --model fal-ai/flux-2-flex --size landscape_16_9 --output wide.png
+fal generate --prompt "..." --model fal-ai/nano-banana-2 --ratio 16:9 --resolution 2K --output hd.png
 fal generate --prompt "..." --seed 42 --num 4 --output batch.png
 ```
 
@@ -112,7 +84,7 @@ fal generate --prompt "..." --seed 42 --num 4 --output batch.png
 |------|----------|---------|-------------|
 | `--prompt`, `-p` | yes | | Image generation prompt |
 | `--output`, `-o` | no | | Save image locally |
-| `--model`, `-m` | no | `nano-banana-2` | Model alias or full ID |
+| `--model`, `-m` | no | `fal-ai/nano-banana-2` | Full model ID (use `fal models` to search) |
 | `--size`, `-s` | no | `square_hd` | Size preset (flux models) |
 | `--num`, `-n` | no | `1` | Number of images (1-4) |
 | `--format` | no | `png` | `jpeg`, `png`, `webp` |
@@ -138,7 +110,7 @@ fal edit --prompt "..." --images "ref1.png" --model flux-2-flex --size landscape
 | `--prompt`, `-p` | yes | | Edit instructions |
 | `--images` | yes | | Comma-separated URLs or local file paths |
 | `--output`, `-o` | no | | Save image locally |
-| `--model`, `-m` | no | `nano-banana-2` | Model alias or full ID |
+| `--model`, `-m` | no | `fal-ai/nano-banana-2` | Full model ID (use `fal models` to search) |
 | `--size`, `-s` | no | `square_hd` | Size preset (non-nano-banana models) |
 | `--format` | no | `png` | `jpeg`, `png`, `webp` |
 | `--seed` | no | | Seed for reproducibility |
@@ -161,7 +133,7 @@ fal video --start img.png --prompt "..." --async
 | `--start` | yes* | | Start frame image (URL or local path) |
 | `--end` | no | | End frame image (URL or local path) |
 | `--output`, `-o` | no | auto-named | Output file path |
-| `--model`, `-m` | no | `kling-2.6` | Model alias or full ID |
+| `--model`, `-m` | no | `fal-ai/kling-video/v2.6/pro/image-to-video` | Full model ID (use `fal models` to search) |
 | `--duration`, `-d` | no | `5` | Duration: `5` or `10` seconds |
 | `--ratio` | no | `9:16` | Aspect ratio |
 | `--negative` | no | | Negative prompt |
@@ -198,17 +170,17 @@ fal run fal-ai/whisper -i '{"audio_url":"https://..."}'
 ### submit - Queue Submission
 
 ```bash
-fal submit kling-2.6 -i '{"prompt":"...","start_image_url":"..."}'
-fal submit kling-2.6 -i '{"prompt":"..."}' --wait --output video.mp4
+fal submit fal-ai/kling-video/v2.6/pro/image-to-video -i '{"prompt":"...","start_image_url":"..."}'
+fal submit fal-ai/kling-video/v2.6/pro/image-to-video -i '{"prompt":"..."}' --wait --output video.mp4
 ```
 
 ### status / result / cancel
 
 ```bash
-fal status kling-2.6 REQUEST_ID
-fal status kling-2.6 REQUEST_ID --logs
-fal result kling-2.6 REQUEST_ID --output video.mp4
-fal cancel kling-2.6 REQUEST_ID
+fal status fal-ai/kling-video/v2.6/pro/image-to-video REQUEST_ID
+fal status fal-ai/kling-video/v2.6/pro/image-to-video REQUEST_ID --logs
+fal result fal-ai/kling-video/v2.6/pro/image-to-video REQUEST_ID --output video.mp4
+fal cancel fal-ai/kling-video/v2.6/pro/image-to-video REQUEST_ID
 ```
 
 ### upload
@@ -226,23 +198,16 @@ fal models seedance                 # Search by name
 fal models --category text-to-video # Filter by category
 ```
 
-### aliases
-
-```bash
-fal aliases
-```
-
 ## MCP Tools (Primitives Only)
 
-The MCP server exposes 8 model-agnostic tools. Model-specific knowledge is in companion skills.
+The MCP server exposes 7 model-agnostic tools. Model-specific knowledge is in companion skills.
 
 | Tool | Description |
 |------|-------------|
+| `fal_search_models` | **Search fal.ai's full model catalog in real-time** (query, category, pagination) |
 | `fal_run` | Run any model synchronously (best for fast ops like image gen) |
 | `fal_submit` | Submit async job to queue (recommended for video, anything >30s) |
 | `fal_status` | Check queue job status (IN_QUEUE, IN_PROGRESS, COMPLETED) |
 | `fal_result` | Get completed job output (auto-downloads to `FAL_OUTPUT_DIR` or `~/Desktop/`) |
 | `fal_cancel` | Cancel a queued job |
 | `fal_upload` | Upload local file to fal CDN |
-| `fal_search_models` | **Search fal.ai's full model catalog in real-time** (query, category, pagination) |
-| `fal_list_aliases` | List hardcoded shortcut aliases |

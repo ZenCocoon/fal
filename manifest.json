@@ -41,8 +41,7 @@
     { "name": "fal_result", "description": "Get completed job output" },
     { "name": "fal_cancel", "description": "Cancel a queued job" },
     { "name": "fal_upload", "description": "Upload a file to fal.ai CDN" },
-    { "name": "fal_search_models", "description": "Search fal.ai's full model catalog in real-time" },
-    { "name": "fal_list_aliases", "description": "List hardcoded shortcut aliases" }
+    { "name": "fal_search_models", "description": "Search fal.ai's full model catalog in real-time" }
   ],
   "keywords": ["ai", "image-generation", "video-generation", "fal-ai", "creative"],
   "license": "MIT",
