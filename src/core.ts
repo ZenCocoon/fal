@@ -223,7 +223,7 @@ export async function autoSaveOutput(
 
   const bytes = await downloadFile(url, outputPath);
   const size = `${(bytes / 1024).toFixed(1)} KB`;
-  console.error(`[fal-ai] Auto-saved: ${outputPath} (${size})`);
+  console.error(`[fal] Auto-saved: ${outputPath} (${size})`);
   return { path: outputPath, size };
 }
 

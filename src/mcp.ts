@@ -14,7 +14,7 @@ import {
   searchModels,
 } from "./core";
 
-console.error("[fal-ai] Loading MCP server module...");
+console.error("[fal] Loading MCP server module...");
 
 // ── Tool definitions (primitives only) ──
 
@@ -333,7 +333,7 @@ async function handleTool(
 
 function createServer(): Server {
   const server = new Server(
-    { name: "fal-ai", version: "3.0.0" },
+    { name: "fal", version: "3.0.0" },
     { capabilities: { tools: {} } }
   );
 
@@ -361,18 +361,18 @@ function createServer(): Server {
 // ── Transport setup ──
 
 async function main() {
-  console.error("[fal-ai] main() started");
-  console.error("[fal-ai] FAL_KEY set:", !!process.env.FAL_KEY);
-  console.error("[fal-ai] Node version:", process.version);
+  console.error("[fal] main() started");
+  console.error("[fal] FAL_KEY set:", !!process.env.FAL_KEY);
+  console.error("[fal] Node version:", process.version);
 
   const server = createServer();
-  console.error("[fal-ai] Server created, connecting stdio transport...");
+  console.error("[fal] Server created, connecting stdio transport...");
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("[fal-ai] Connected and ready");
+  console.error("[fal] Connected and ready");
 }
 
 main().catch((err) => {
-  console.error("[fal-ai] Fatal error:", err?.stack || err);
+  console.error("[fal] Fatal error:", err?.stack || err);
   process.exit(1);
 });

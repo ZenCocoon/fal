@@ -41,7 +41,7 @@ Download `fal.mcpb` from the [latest release](https://github.com/ZenCocoon/fal/r
 ### Claude Code
 
 ```bash
-claude mcp add fal-ai -- npx -y @zencocoon/fal@latest
+claude mcp add fal -- npx -y @zencocoon/fal@latest
 ```
 
 ### Claude Desktop / Cursor
@@ -51,7 +51,7 @@ Add to your MCP config (`~/.claude/claude_desktop_config.json` or `~/.cursor/mcp
 ```json
 {
   "mcpServers": {
-    "fal-ai": {
+    "fal": {
       "command": "npx",
       "args": ["-y", "@zencocoon/fal@latest"],
       "env": {

@@ -24,7 +24,7 @@ fal <command> [options]
 
 **Local (stdio):**
 ```bash
-claude mcp add fal-ai -- node /Users/sebgrosjean/work/CLIs/fal/dist/mcp.js
+claude mcp add fal -- node /Users/sebgrosjean/work/CLIs/fal/dist/mcp.js
 ```
 
 **Remote (HTTP):**

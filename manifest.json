@@ -1,6 +1,6 @@
 {
   "manifest_version": "0.3",
-  "name": "fal-ai",
+  "name": "fal",
   "display_name": "Fal.ai",
   "version": "3.0.0",
   "icon": "icon.png",
