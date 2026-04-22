@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(json|ts|js|md\\)$\")",
+      "Bash(python3:*)",
+      "Bash(node /Users/sebgrosjean/work/CLIs/fal/dist/mcp-bundled.js)"
+    ]
+  }
+}

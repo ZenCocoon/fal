@@ -1,0 +1,27 @@
+# Source files (dist is enough)
+src/
+tsconfig.json
+entry.cjs
+
+# All node_modules (bundled into mcp-bundled.js)
+node_modules/
+
+# Non-bundled dist files
+dist/mcp.js
+dist/mcp.d.ts
+dist/cli.js
+dist/cli.d.ts
+dist/core.js
+dist/core.d.ts
+
+# Test files and docs
+**/test/
+**/tests/
+**/*.test.*
+**/CHANGELOG.md
+**/HISTORY.md
+**/README.md
+
+# Build artifacts
+*.dxt
+*.mcpb

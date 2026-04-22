@@ -1,0 +1,53 @@
+{
+  "name": "@zencocoon/fal",
+  "version": "3.0.0",
+  "description": "Fal.ai CLI and MCP server — run any fal.ai model with dynamic model discovery",
+  "type": "commonjs",
+  "license": "MIT",
+  "author": {
+    "name": "Sebastien Grosjean",
+    "url": "https://www.sebgrosjean.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zencocoon/fal.git"
+  },
+  "homepage": "https://github.com/zencocoon/fal#readme",
+  "bugs": {
+    "url": "https://github.com/zencocoon/fal/issues"
+  },
+  "keywords": ["fal", "fal-ai", "mcp", "cli", "image-generation", "video-generation", "ai", "creative"],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "bin": {
+    "fal": "./dist/cli.js",
+    "fal-mcp": "./dist/mcp.js"
+  },
+  "files": [
+    "dist/",
+    "skills/",
+    "manifest.json",
+    "icon.png",
+    "CLAUDE.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc && npx esbuild dist/mcp.js --bundle --platform=node --target=node18 --format=cjs --outfile=dist/mcp-bundled.js",
+    "build:mcpb": "npm run build && rm -f fal.mcpb && zip -r fal.mcpb manifest.json icon.png dist/mcp-bundled.js package.json CLAUDE.md skills/ .claude/settings.local.json",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/mcp.js",
+    "cli": "node dist/cli.js"
+  },
+  "dependencies": {
+    "@fal-ai/client": "^1.3.1",
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}

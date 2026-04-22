@@ -1,0 +1,52 @@
+{
+  "manifest_version": "0.3",
+  "name": "fal-ai",
+  "display_name": "Fal.ai",
+  "version": "3.0.0",
+  "icon": "icon.png",
+  "description": "Run any fal.ai model: image generation, video generation, upscaling, and more. Model-agnostic primitives with companion skills for Kling 3.0, Nano Banana 2, and Seedance 2.0.",
+  "long_description": "A thin, stable fal.ai API wrapper for Claude Desktop. Provides model-agnostic primitives (submit, run, status, result, upload, cancel) that work with any fal.ai model. Dynamic model discovery via fal_search_models. Includes companion skills for Kling 3.0 video generation, Nano Banana 2 image generation, and Seedance 2.0 video generation with full parameter references, prompting guides, and workflow guidance.",
+  "author": {
+    "name": "Sebastien Grosjean",
+    "url": "https://www.sebgrosjean.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zencocoon/fal.git"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "dist/mcp-bundled.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/mcp-bundled.js"],
+      "env": {
+        "FAL_KEY": "${user_config.fal_key}"
+      }
+    }
+  },
+  "user_config": {
+    "fal_key": {
+      "type": "string",
+      "title": "Fal.ai API Key",
+      "description": "Your fal.ai API key. Get one at https://fal.ai/dashboard/keys",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "tools": [
+    { "name": "fal_submit", "description": "Submit an async job to any fal.ai model" },
+    { "name": "fal_run", "description": "Run any fal.ai model synchronously" },
+    { "name": "fal_status", "description": "Check job status" },
+    { "name": "fal_result", "description": "Get completed job output" },
+    { "name": "fal_cancel", "description": "Cancel a queued job" },
+    { "name": "fal_upload", "description": "Upload a file to fal.ai CDN" },
+    { "name": "fal_search_models", "description": "Search fal.ai's full model catalog in real-time" },
+    { "name": "fal_list_aliases", "description": "List hardcoded shortcut aliases" }
+  ],
+  "keywords": ["ai", "image-generation", "video-generation", "fal-ai", "creative"],
+  "license": "MIT",
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"]
+  }
+}
