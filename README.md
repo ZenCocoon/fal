@@ -1,6 +1,6 @@
 # Fal.ai CLI & MCP Server
 
-[![npm version](https://img.shields.io/npm/v/@zencocoon/fal.svg)](https://www.npmjs.com/package/@zencocoon/fal)
+[![npm version](https://img.shields.io/npm/v/@sebgrosjean/fal.svg)](https://www.npmjs.com/package/@sebgrosjean/fal)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18-green.svg)](https://nodejs.org/)
 
@@ -28,10 +28,10 @@ Run any fal.ai model from the terminal or through an MCP server. Dynamic model d
 
 ```bash
 # Zero-install (recommended)
-npx @zencocoon/fal models seedance
+npx @sebgrosjean/fal models seedance
 
 # Global install
-npm install -g @zencocoon/fal
+npm install -g @sebgrosjean/fal
 ```
 
 ### Claude CoWork (MCPB)
@@ -41,7 +41,7 @@ Download `fal.mcpb` from the [latest release](https://github.com/ZenCocoon/fal/r
 ### Claude Code
 
 ```bash
-claude mcp add fal -- npx -y @zencocoon/fal@latest
+claude mcp add fal -- npx -y @sebgrosjean/fal@latest
 ```
 
 ### Claude Desktop / Cursor
@@ -53,7 +53,7 @@ Add to your MCP config (`~/.claude/claude_desktop_config.json` or `~/.cursor/mcp
   "mcpServers": {
     "fal": {
       "command": "npx",
-      "args": ["-y", "@zencocoon/fal@latest"],
+      "args": ["-y", "@sebgrosjean/fal@latest"],
       "env": {
         "FAL_KEY": "your-fal-api-key"
       }

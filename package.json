@@ -1,5 +1,5 @@
 {
-  "name": "@zencocoon/fal",
+  "name": "@sebgrosjean/fal",
   "version": "3.0.0",
   "description": "Fal.ai CLI and MCP server — run any fal.ai model with dynamic model discovery",
   "type": "commonjs",
@@ -10,19 +10,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zencocoon/fal.git"
+    "url": "git+https://github.com/zencocoon/fal.git"
   },
   "homepage": "https://github.com/zencocoon/fal#readme",
   "bugs": {
     "url": "https://github.com/zencocoon/fal/issues"
   },
-  "keywords": ["fal", "fal-ai", "mcp", "cli", "image-generation", "video-generation", "ai", "creative"],
+  "keywords": [
+    "fal",
+    "fal-ai",
+    "mcp",
+    "cli",
+    "image-generation",
+    "video-generation",
+    "ai",
+    "creative"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },
   "bin": {
-    "fal": "./dist/cli.js",
-    "fal-mcp": "./dist/mcp.js"
+    "fal": "dist/cli.js",
+    "fal-mcp": "dist/mcp.js"
   },
   "files": [
     "dist/",
